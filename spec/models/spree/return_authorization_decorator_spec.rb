@@ -4,18 +4,17 @@ describe Spree::ReturnAuthorization, type: :model do
   it { should have_one :avalara_transaction }
   subject(:user) { FactoryGirl.create(:user) }
   subject(:stock_location) { FactoryGirl.create(:stock_location) }
+
   subject(:order) do
-     order = FactoryGirl.create(:shipped_order)
-     Spree::AvalaraTransaction.find_or_create_by(order: order)
-     order.line_items.first.tax_category.update_attributes(description: 'PC030000')
+    order = FactoryGirl.create(:shipped_order)
+    Spree::AvalaraTransaction.find_or_create_by(order: order)
     order.reload
-     order
+    order
   end
 
   subject(:return_authorization) { Spree::ReturnAuthorization.create(:order => order, :stock_location => stock_location) }
 
   before do
-    MyConfigPreferences.set_preferences
     @inventory_unit = order.shipments.first.inventory_units.first
     @variant = order.variants.first
   end
